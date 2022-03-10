@@ -4,6 +4,14 @@ require("express-async-errors");
 const express = require("express");
 const app = express();
 
+// cloudinary(ebergeur)
+const cloudinary = require('cloudinary').v2
+cloudinary.config({
+  cloud_name: process.env.CLOUD_NAME,
+  api_key: process.env.CLOUD_API_KEY,
+  api_secret: process.env.CLOUD_API_SECRET
+})
+
 const fileUpload = require("express-fileupload");
 
 // database
@@ -18,7 +26,7 @@ const productRouter = require("./routes/ProductRoutes");
 
 app.use(express.static("./public"));
 app.use(express.json());
-app.use(fileUpload());
+app.use(fileUpload({ useTempFiles: true }));
 
 app.get("/", (req, res) => {
   res.send("salut");
@@ -39,7 +47,7 @@ const start = async () => {
     app.listen(PORT, () => {
       console.log(`server is now listening to port:${PORT}`);
     });
-  } catch (error) {}
+  } catch (error) { }
 };
 
 start();
